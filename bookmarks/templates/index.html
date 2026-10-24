@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My Bookmarks</title>
+    {% load static %}
+</head>
+
+<body>
+
+<h1> Personal Bookmark Manager</h1>
+
+<div class="one">
+    <div class="two">
+        <form method="post" action="{% url 'index' %}">
+            {% csrf_token %}
+            <div> Title :
+                <input type="text" class="inputbox" name="title" placeholder="Title" required>
+            </div>
+            <br>
+            <div> URL :
+                <input type="url" class="inputbox" name="url" placeholder="URL" required>
+            </div>
+            <br>
+            <div> Category :
+                <select name="category" id="" class="inputbox">
+                    <option value="Python">Python</option>
+                    <option value="CSS">CSS</option>
+                    <option value="HTML">HTML</option>
+                    <option value="Django">Django</option>
+                    <option value="JavaScript">JavaScript</option>
+                    <option value="General" selected>General</option>
+                </select>
+            </div>
+            <br>
+            <button type="submit"> Add Bookmark</button>
+        </form>
+    </div>
+</div>
+
+<div class="divide">
+    <div>
+        <div class="filter">
+            Filter Category
+        </div>
+        <div class="category">
+            <br>
+            <button onclick="filterCategory('all')">All</button>
+            <br><br>
+            <button onclick="filterCategory('Python')">Python</button>
+            <br><br>
+            <button onclick="filterCategory('CSS')">CSS</button>
+            <br><br>
+            <button onclick="filterCategory('HTML')">HTML</button>
+            <br><br>
+            <button onclick="filterCategory('Django')">Django</button>
+            <br><br>
+            <button onclick="filterCategory('JavaScript')">JavaScript</button>
+        </div>
+    </div>
+    <div>
+        <img src="{% static 'images/one.jpg' %}" alt="Bookmark Logo" width="500" height="500" class="img">
+    </div>
+</div>
+
+<div id="bookmark-list">
+    {% for bookmark in bookmarks %}
+    <div class="card" data-category="{{bookmark.category}}">
+        <h3>{{bookmark.title}}</h3>
+        <p>Category: <b>{{bookmark.category}}</b></p>
+        <a href="{{bookmark.url}}" target="_blank" class="two">Visit Site</a>
+        <a href="{% url 'delete' bookmark.id %}">Delete</a>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    function filterCategory(category) {
+        let cards = document.querySelectorAll('.card');
+
+        cards.forEach(card => {
+            let cardCategory = card.getAttribute('data-category');
+
+            if (category === 'all' ||
+                cardCategory.toLowerCase() === category.toLowerCase()) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+</script>
+
+<style>
+    body{
+        background-image: url("{% static 'images/background.jpg' %}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+    .one{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 40vh;
+        font-size: 20px;
+    }
+    .one .two{
+        width: 420px;
+        padding: 30px 40px;
+    }
+    h1{
+        font-size: 36px;
+        text-align: center;
+    }
+    .inputbox{
+        width: 100%;
+        height: 100%;
+        padding: 5px;
+        font-size: 16px;
+        margin-top: 10px;
+        margin-bottom: 2px;
+        border: none;
+        outline: none;
+        border: 2px solid black;
+        border-radius: 40px;
+    }
+    .card{
+        border: 1px solid black;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+        width: 300px;
+        font-size: 20px;
+    }
+    button{
+        font-size: 20px;
+        border-radius: 5px;
+    }
+    .divide{
+        padding: 60px;
+        margin-left: 300px;
+        margin-right: 300px;
+        display: flex;
+        justify-content: space-between;
+    }
+    .filter{
+        font-size: 30px;
+    }
+    .category{
+        object-fit: cover;
+        margin-left: 50px;
+    }
+    .img{
+        border-radius: 10px;
+    }
+    .two{
+        margin-right: 130px;
+    }
+</style>
+
+</body>
+
+</html>
